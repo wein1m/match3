@@ -1,0 +1,18 @@
+CompileFlags:
+  Add: [
+    -IC:/raylib/raylib/src,
+    -IC:/raylib/w64devkit/include,
+    -DGRAPHICS_API_OPENGL_33,
+    -DPLATFORM_DESKTOP,
+    -std=c++20
+  ]
+
+Diagnostics:
+  UnusedIncludes: Strict
+
+Index:
+  Background: true
+
+Completion:
+  AllScopes: true
+
