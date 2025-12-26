@@ -14,7 +14,8 @@ char board[BOARD_SIZE][BOARD_SIZE];
 
 Vector2 board_origin;
 
-int score = 0;
+int score             = 0;
+Vector2 selected_tile = {-1, -1};
 
 char get_randomTile() {
   return tile_chars[rand() % TILE_TYPES];
@@ -51,7 +52,22 @@ int main() {
 
   init_board();
 
+  Vector2 mouse_coord = {0, 0};
+
   while (!WindowShouldClose()) {
+
+    mouse_coord = GetMousePosition();
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+      float x = (mouse_coord.x - board_origin.x) / TILE_SIZE;
+      float y = (mouse_coord.y - board_origin.y) / TILE_SIZE;
+
+      if ((x >= 0 && x < BOARD_SIZE) && (y >= 0 && y < BOARD_SIZE)) {
+        selected_tile = (Vector2){floor(x), floor(y)};
+      }
+
+      printf("%f, %f\n", x, y);
+    }
+
     BeginDrawing();
     ClearBackground(darkBlue);
 
@@ -74,6 +90,16 @@ int main() {
         );
         // clang-format on
       }
+    }
+
+    if (selected_tile.x >= 0) {
+      DrawRectangleLinesEx(
+          (Rectangle){board_origin.x + (selected_tile.x * TILE_SIZE),
+              board_origin.y + (selected_tile.y * TILE_SIZE),
+              TILE_SIZE,
+              TILE_SIZE},
+          2,
+          YELLOW);
     }
 
     DrawTextEx(font_04b03,
