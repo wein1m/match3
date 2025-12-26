@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include <math.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define BOARD_SIZE 8
 #define TILE_SIZE 42
@@ -20,4 +21,34 @@ void init_board() {
   }
 }
 
-int main() { return 0; }
+int main() {
+  const int screenW = 800;
+  const int screenH = 450;
+
+  InitWindow(screenW, screenH, "ASCII MATCH 3~");
+  SetTargetFPS(60);
+  srand(time(NULL)); // time(NULL) returns current time in seconds
+
+  init_board();
+
+  while (!WindowShouldClose()) {
+    BeginDrawing();
+    ClearBackground(BLACK);
+
+    for (int y = 0; y < BOARD_SIZE; y++) {
+      for (int x = 0; x < BOARD_SIZE; x++) {
+        Rectangle rect = {x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
+
+        DrawRectangleLinesEx(rect, 1, DARKGRAY);
+
+        DrawTextEx(GetFontDefault(), TextFormat("%c", board[y][x]),
+                   (Vector2){rect.x + 12, rect.y + 8}, 20, 1, WHITE);
+      }
+    }
+
+    EndDrawing();
+  }
+
+  CloseWindow();
+  return 0;
+}
