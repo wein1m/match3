@@ -11,8 +11,10 @@ const char tile_chars[TILE_TYPES] = {'#', '@', '$', '%', '&'};
 
 char board[BOARD_SIZE][BOARD_SIZE];
 
-char get_randomTile() {
-  return tile_chars[rand() % TILE_TYPES];
+Vector2 grid_origin;
+
+char get_randomTile() { 
+  return tile_chars[rand() % TILE_TYPES]; 
 }
 
 void init_board() {
@@ -39,22 +41,21 @@ int main() {
 
     for (int y = 0; y < BOARD_SIZE; y++) {
       for (int x = 0; x < BOARD_SIZE; x++) {
-        // clang-format off
         Rectangle rect = {
           (float)x * TILE_SIZE, 
           (float)y * TILE_SIZE,
-          TILE_SIZE, TILE_SIZE};
-        // clang-format on
+          TILE_SIZE,
+          TILE_SIZE
+        };
 
         DrawRectangleLinesEx(rect, 1, DARKGRAY);
 
-        // clang-format off
         DrawTextEx(
           GetFontDefault(),
           TextFormat("%c", board[y][x]),
-          (Vector2){rect.x + 12, rect.y + 8},
-          20, 1, WHITE);
-        // clang-format on
+          (Vector2){rect.x + 12, rect.y + 8}, 
+          20, 1, WHITE
+        );
       }
     }
 
@@ -64,4 +65,3 @@ int main() {
   CloseWindow();
   return 0;
 }
-

@@ -1,0 +1,27 @@
+BasedOnStyle: LLVM
+BreakBeforeBraces: Attach 
+BraceWrapping:
+  AfterStruct: true
+  BeforeCatch: true
+  BeforeElse: true
+  SplitEmptyFunction: true
+
+AlignArrayOfStructures: Left
+AlignConsecutiveAssignments: true
+AlignAfterOpenBracket: false
+
+AllowShortLoopsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortFunctionsOnASingleLine: Inline
+
+BinPackArguments: false
+BinPackParameters: false
+BinPackLongBracedList: true
+
+InsertTrailingCommas: None
+
+AllowAllConstructorInitializersOnNextLine: true
+Cpp11BracedListStyle: true
+
+ColumnLimit: 80
+
