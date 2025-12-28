@@ -11,6 +11,7 @@
 const char tile_chars[TILE_TYPES] = {'#', '@', '$', '%', '&'};
 
 char board[BOARD_SIZE][BOARD_SIZE];
+bool matched[BOARD_SIZE][BOARD_SIZE];
 
 Vector2 board_origin;
 
@@ -19,6 +20,38 @@ Vector2 selected_tile = {-1, -1};
 
 char get_randomTile() {
   return tile_chars[rand() % TILE_TYPES];
+}
+
+bool find_matches() {
+  for (int y = 0; y < BOARD_SIZE; y++) {
+    for (int x = 0; x < BOARD_SIZE; x++) {
+      matched[y][x] = false;
+    }
+  }
+
+  for (int y = 0; y < BOARD_SIZE; y++) {
+    for (int x = 0; x < BOARD_SIZE - 2; x++) {
+      char t = board[y][x];
+      if (t == board[y][x + 1] && t == board[y][x + 2]) {
+        matched[y][x] = matched[y][x + 1] = matched[y][x + 2] = true;
+        score += 10;
+        return true;
+      }
+    }
+  }
+
+  for (int x = 0; x < BOARD_SIZE; x++) {
+    for (int y = 0; y < BOARD_SIZE - 2; y++) {
+      char t = board[y][x];
+      if (t == board[y + 1][x] && t == board[y + 2][x]) {
+        matched[y][x] = matched[y + 1][x] = matched[y + 2][x] = true;
+        score += 10;
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
 
 void init_board() {
@@ -56,6 +89,7 @@ int main() {
 
   while (!WindowShouldClose()) {
 
+    // Get Selected Tile
     mouse_coord = GetMousePosition();
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
       float x = (mouse_coord.x - board_origin.x) / TILE_SIZE;
@@ -68,9 +102,12 @@ int main() {
       printf("%f, %f\n", x, y);
     }
 
+    find_matches();
+
     BeginDrawing();
     ClearBackground(darkBlue);
 
+    // Draw Board
     for (int y = 0; y < BOARD_SIZE; y++) {
       for (int x = 0; x < BOARD_SIZE; x++) {
         // clang-format off
@@ -86,12 +123,14 @@ int main() {
           GetFontDefault(),
           TextFormat("%c", board[y][x]),
           (Vector2){rect.x + 15, rect.y + 11},
-          20, 1, WHITE
+          20, 1, 
+          matched[y][x] == true ? GREEN : WHITE
         );
         // clang-format on
       }
     }
 
+    // Draw Selected Tile
     if (selected_tile.x >= 0) {
       DrawRectangleLinesEx(
           (Rectangle){board_origin.x + (selected_tile.x * TILE_SIZE),
@@ -102,6 +141,7 @@ int main() {
           YELLOW);
     }
 
+    // Draw Score
     DrawTextEx(font_04b03,
         TextFormat("score: %d", score),
         (Vector2){20, 20},
