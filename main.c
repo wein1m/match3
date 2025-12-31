@@ -22,7 +22,9 @@ char get_randomTile() {
   return tile_chars[rand() % TILE_TYPES];
 }
 
+// get matched tiles
 bool find_matches() {
+  bool found = false;
   for (int y = 0; y < BOARD_SIZE; y++) {
     for (int x = 0; x < BOARD_SIZE; x++) {
       matched[y][x] = false;
@@ -35,7 +37,7 @@ bool find_matches() {
       if (t == board[y][x + 1] && t == board[y][x + 2]) {
         matched[y][x] = matched[y][x + 1] = matched[y][x + 2] = true;
         score += 10;
-        return true;
+        found = true;
       }
     }
   }
@@ -46,12 +48,30 @@ bool find_matches() {
       if (t == board[y + 1][x] && t == board[y + 2][x]) {
         matched[y][x] = matched[y + 1][x] = matched[y + 2][x] = true;
         score += 10;
-        return true;
+        found = true;
       }
     }
   }
 
-  return false;
+  return found;
+}
+
+// remove and add random tiles
+void resolve_matches() {
+  for (int x = 0; x < BOARD_SIZE; x++) {
+    int write_y = BOARD_SIZE - 1;
+    for (int y = BOARD_SIZE - 1; y >= 0; y--) {
+      if (!matched[y][x]) {
+        board[write_y][x] = board[y][x];
+        write_y--;
+      }
+    }
+
+    while (write_y >= 0) {
+      board[write_y][x] = get_randomTile();
+      write_y--;
+    }
+  }
 }
 
 void init_board() {
@@ -102,7 +122,9 @@ int main() {
       printf("%f, %f\n", x, y);
     }
 
-    find_matches();
+    if (find_matches()) {
+      resolve_matches();
+    };
 
     BeginDrawing();
     ClearBackground(darkBlue);
